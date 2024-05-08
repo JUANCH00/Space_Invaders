@@ -4,18 +4,24 @@ import java.awt.Image;
 
 import co.edu.uptc.pojos.ElementPojo;
 import co.edu.uptc.utils.Utils;
+import co.edu.uptc.utils.UtilsProperties;
 
 public class LaserModel {
-    private int speed = 100;
+    private UtilsProperties properties;
+    private int speed;
     private ElementPojo laserPojo = new ElementPojo();
     private boolean running = false;
+    private boolean isVisible = false;
 
     public LaserModel(ShipModel shipModel) {
-        laserPojo.setX(shipModel.getX() - 20);
-        laserPojo.setY(shipModel.getY() - 50);
-        laserPojo.setPadding(10);
-        laserPojo.setHeight(180);
-        laserPojo.setWidth(80);
+        properties = new UtilsProperties();
+        speed = properties.getSleepGame() - 80;
+        laserPojo.setX(shipModel.getX() - 18);
+        laserPojo.setY(shipModel.getY() - 25);
+        laserPojo.setPadding(properties.getPadding());
+        laserPojo.setHeight(properties.getLaserHeigth());
+        laserPojo.setWidth(properties.getLaserWidth());
+        isVisible = true;
     }
 
     public void stop() {
@@ -47,6 +53,14 @@ public class LaserModel {
         return laserPojo.getHeight();
     }
 
+    public boolean getVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
+
     public void startElement() {
         this.running = true;
         Thread thread = new Thread(new Runnable() {
@@ -68,5 +82,8 @@ public class LaserModel {
 
     public void up() {
         laserPojo.setY(laserPojo.getY() - 10);
+        if (laserPojo.getY() <= 1) {
+            setVisible(false);
+        }
     }
 }

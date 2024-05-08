@@ -2,6 +2,8 @@ package co.edu.uptc.presenters;
 
 import java.util.ArrayList;
 
+import co.edu.uptc.models.AlienModel;
+import co.edu.uptc.models.LaserModel;
 import co.edu.uptc.models.ManagerModel;
 import co.edu.uptc.pojos.ElementPojo;
 import co.edu.uptc.presenters.ContractPlay.Model;
@@ -12,6 +14,17 @@ public class Presenter implements ContractPlay.Presenter {
 
     private ContractPlay.View view;
     private ContractPlay.Model model;
+
+    public void makeMVP() {
+        ManagerModel managerModel = new ManagerModel();
+        managerModel.setPresenter(this);
+
+        DashBoard dashBoard = new DashBoard();
+        dashBoard.setPresenter(this);
+
+        setModel(managerModel);
+        setView(dashBoard);
+    }
 
     @Override
     public void setModel(Model model) {
@@ -28,15 +41,9 @@ public class Presenter implements ContractPlay.Presenter {
         this.view = view;
     }
 
-    public void makeMVP() {
-        ManagerModel managerModel = new ManagerModel();
-        managerModel.setPresenter(this);
-
-        DashBoard dashBoard = new DashBoard();
-        dashBoard.setPresenter(this);
-
-        setModel(managerModel);
-        setView(dashBoard);
+    @Override
+    public void reboot() {
+        model.reboot();
     }
 
     @Override
@@ -46,20 +53,33 @@ public class Presenter implements ContractPlay.Presenter {
     }
 
     @Override
-    public ArrayList<ElementPojo> getElementsPojo() {
-        return model.getElementsPojo();
+    public ElementPojo getShipPojo() {
+        return model.getShipPojo();
+    }
+
+    @Override
+    public ArrayList<LaserModel> getLasersPojos() {
+        return model.getLasersPojos();
     }
 
     @Override
     public void start() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'start'");
+        model.start();
     }
 
     @Override
     public void stop() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'stop'");
+        model.stop();
+    }
+
+    @Override
+    public void shoot() {
+        model.addLaser();
+    }
+
+    @Override
+    public ArrayList<AlienModel> getAlienPojos() {
+        return model.getAlienPojos();
     }
 
 }
